@@ -13,6 +13,36 @@ static int trackerNumNodes = 0;
 // used to track where we are for the list traversal methods
 static Node *traverseNode = NULL;
 
+
+//-------------------------------------------------------------------------------------
+// FUNCTIONS
+//-------------------------------------------------------------------------------------
+
+/******************************************************
+ * Validates the string and the linked list
+ *******************************************************/
+static void checkState( char const * const string) {
+    
+    assert( string != NULL );
+    assert( '\0' == string[strlen( string )] );
+    assert( numNodes >= 0 );
+    
+    if ( numNodes == 0 ) {
+        
+        assert( top == NULL );
+        
+    } else if ( numNodes == 1 ) {
+        
+        assert( top->next == NULL );
+        
+    } else {
+        
+        assert( top != NULL );
+        //   assert( top->next != NULL );
+    }
+    
+} // checkState
+
 /****************************************************
  *add an element to the beginning of the linked list
  @new-string word to be added
