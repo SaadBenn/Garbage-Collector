@@ -420,3 +420,32 @@ Boolean deletePtr( void* target )
 } // end delete function
 
 
+r_size_t bytesSearch( void *ptr )
+{
+    r_size_t blockSize = 0;
+    Boolean found = false;
+    currTracker = topTracker;
+    assert( currTracker == topTracker );
+    
+    while ( currTracker != NULL && !found )
+    {
+        assert( currTracker != NULL );
+        
+        if ( currTracker->startLoc == ptr )
+        {
+            assert( currTracker->startLoc == ptr );
+            found = true;
+            blockSize = currTracker->blockSize;
+        }
+        
+        else
+        {
+            assert( currTracker->startLoc != ptr );
+            curr = curr->next;
+        }
+    }
+    
+    return blockSize;
+} //bytesSearch
+
+
