@@ -152,3 +152,44 @@ Boolean delete( char const * const target )
 } // end delete function
 
 
+/****************************************************
+ *starts a list traversal by getting the data at top
+ *return string
+ ****************************************************/
+Node * getFirstNode()
+{
+    
+    Node *result = NULL;
+    
+    if( top != NULL ) {
+        
+        assert( top != NULL );
+        traverseNode = top->next;
+        result = top;
+    }
+    
+    return result;
+} // end getFirstNode
+
+
+/****************************************************
+ *gets the data at the current traversal node and
+ *increments the traversal
+ *returns the string if node is not null
+ ****************************************************/
+Node * nextNode()
+{
+    Node *cNode = NULL;
+    
+    // no need to go past the end of the list...
+    if ( traverseNode != NULL )
+    {
+        assert( traverseNode != NULL );
+        cNode = traverseNode;
+        traverseNode = traverseNode->next;
+    }
+    
+    return cNode;
+} //  nextNde
+
+
