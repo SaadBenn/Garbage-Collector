@@ -483,3 +483,31 @@ Boolean cleanInnerList() {
 } // cleanInnerList
 
 
+void innerListLoop() {
+    
+    r_size_t sum = 0;
+    Chunk *ptrCurr = topTracker;
+    
+    while(ptrCurr) {
+        
+        void *ptr = ptrCurr->startLoc;
+        
+        r_size_t size = ptrCurr->blockSize;
+        sum+= ptrCurr->blockSize;
+        printf("Address of Block is: %p\tBlock Size: %hu\n", ptr, size);
+        
+        ptrCurr = ptrCurr->next;
+    }
+    
+    if( sum == 0) {
+        //printf("\033[35m");
+        printf("\n%s\n", "No blocks allocated so far.");
+        //printf("\033[0m");
+    } else {
+    
+        double freePercentage = ((curr->size - sum)/(double)curr->size) * 100;
+        printf("\nPercent of memory free is %6.2f%%\n", freePercentage);
+    }
+} // innerListLoop
+
+
