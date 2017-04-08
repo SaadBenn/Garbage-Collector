@@ -1,4 +1,17 @@
+//-----------------------------------------
+// NAME: Saad B Mushtaq
+// STUDENT NUMBER: 7785430
+// COURSE: COMP 2160, SECTION: A01
+// INSTRUCTOR: Franklin Bristow
+// ASSIGNMENT: assignment 4
+// 
+// REMARKS: table
 
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+#include "table.h"
+#include "regions.h"
 //-------------------------------------------------------------------------------------
 // VARIABLES
 //-------------------------------------------------------------------------------------
