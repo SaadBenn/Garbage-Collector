@@ -34,7 +34,23 @@ Boolean rinit( const char *region_name, r_size_t region_size ) {
   
 
 Boolean rchoose( const char *region_name ) {
-
+    
+    Boolean check = search( region_name );
+    Boolean result = true;
+    
+    current = getCurr();
+    //topTracker = getTopTracker();
+    topTracker = current->head;
+    if( check && current ) {
+        assert( check );
+        assert( current );
+        
+    } else {
+        result = false;
+    }
+    
+    return result;
+    
 } // rchoose
 
 
