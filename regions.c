@@ -55,7 +55,18 @@ Boolean rchoose( const char *region_name ) {
 
 
 const char *rchosen() {
-
+    
+    const char* name = NULL;
+    
+    Node *curr = getFirstNode();
+    
+    if( curr ) {
+    	assert( curr != NULL );
+        name = curr->string;
+    }
+    
+    return name;
+    
 } // rchosen
 
 
