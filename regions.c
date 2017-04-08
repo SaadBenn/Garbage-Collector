@@ -91,7 +91,13 @@ void *ralloc( r_size_t block_size ) {
 
 
 r_size_t rsize( void *block_ptr ) {
-
+    
+    r_size_t size = 0;
+    size = bytesSearch(block_ptr);
+    
+    assert( size >= 0 );
+    return size;
+    
 } // rsize
 
 
