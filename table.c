@@ -84,3 +84,71 @@ Boolean search( char const * const target )
 } // search
 
 
+/****************************************************
+ *remove an element with the given string
+ @target word to be added
+ *@returns true item was deleted
+ ****************************************************/
+Boolean delete( char const * const target )
+{
+    
+    checkState( target );
+    
+    Boolean deleted = false;
+    Node *curr = top;
+    assert( curr == top );
+    
+    Node *prev = NULL;
+    assert( prev == NULL );
+    
+    while ( curr != NULL && strcmp( target, curr->string ) != 0 )
+    {
+        assert( curr != NULL );
+        assert( strcmp( target, curr->string) != 0 );
+        
+        prev = curr;
+        curr = curr->next;
+    }
+    
+    
+    if ( curr != NULL )
+    {
+        assert( curr != NULL );
+        
+        if ( prev != NULL ) {
+            
+            assert( prev != NULL );
+            prev->next = curr->next;
+            topTracker = top->head;
+            
+        } else {
+            
+            top = curr->next;
+            if(top)
+            topTracker = top->head;
+        }
+        
+        if( curr->string != NULL ) {
+            
+            if( curr != NULL ) {
+                
+                free( curr->memory);
+                free( curr->string );
+            } // end innner if
+            
+            free( curr );
+        } // end outer if
+        
+        
+        curr = NULL;
+        assert( curr == NULL );
+        
+        deleted = true;
+        numNodes--;
+    }
+    
+    return deleted;
+    
+} // end delete function
+
+
