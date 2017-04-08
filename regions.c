@@ -4,6 +4,7 @@
 #include "table.h"
 #include <string.h>
 
+Node *current = NULL;
 
 Boolean rinit( const char *region_name, r_size_t region_size ) {
     
