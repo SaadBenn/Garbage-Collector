@@ -8,6 +8,7 @@
 // REMARKS: table
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include "table.h"
@@ -549,7 +550,7 @@ void innerListLoop() {
     } else {
     
         double freePercentage = ((curr->size - sum)/(double)curr->size) * 100;
-        printf("\nPercent of memory free is %6.2f%%\n", freePercentage);
+        printf("\nPercent of memory free is \t%6.2f%%\n", freePercentage);
     }
 } // innerListLoop
 
