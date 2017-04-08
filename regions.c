@@ -72,7 +72,21 @@ const char *rchosen() {
 
 
 void *ralloc( r_size_t block_size ) {
-
+    void * ptr = NULL;
+    
+    block_size = (block_size + 7) - ((block_size + 7) % 8); // round up
+    
+    if( block_size > 0 && block_size <= current->size) {
+        assert( block_size > 0 );
+        assert( block_size <= current->size );
+        
+        ptr = allocBlock(block_size, ptr);
+        
+    }
+    
+    
+    return ptr;
+    
 } // ralloc
 
 
