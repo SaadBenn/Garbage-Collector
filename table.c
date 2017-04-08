@@ -370,4 +370,53 @@ void* allocBlock( r_size_t block_Required, void *ptr ) {
 
 
 
+Boolean deletePtr( void* target )
+{
+    
+    //checkState( target );
+    
+    Boolean deleted = false;
+    Chunk *currN = topTracker;
+    assert( currN == topTracker );
+    
+    Chunk *prev = NULL;
+    assert( prev == NULL );
+    
+    while ( currN != NULL && (currN->startLoc != target) )
+    {
+        assert( currN != NULL );
+        assert( currN->startLoc != target );
+        
+        prev = currN;
+        currN = currN->next;
+    }
+    
+    
+    if ( currN != NULL )
+    {
+        assert( currN != NULL );
+        
+        if ( prev != NULL ) {
+            
+            assert( prev != NULL );
+            prev->next = currN->next;
+            
+        } else {
+            
+            topTracker = currN->next;
+            curr->head = currN->next;
+            
+        }
+        
+        free( currN );
+        currN = NULL;
+        assert( currN == NULL );
+        deleted = true;
+        trackerNumNodes--;
+    }
+    
+    return deleted;
+    
+} // end delete function
+
 
