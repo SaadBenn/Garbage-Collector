@@ -5,6 +5,7 @@
 #include <string.h>
 
 Node *current = NULL;
+extern Chunk *topTracker;
 
 Boolean rinit( const char *region_name, r_size_t region_size ) {
     
@@ -119,6 +120,7 @@ void rdestroy( const char *region_name ) {
     	delete( region_name );
     }
 } // rdestroy
+
 
 
 void rdump() {
