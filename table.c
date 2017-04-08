@@ -511,3 +511,15 @@ void innerListLoop() {
 } // innerListLoop
 
 
+/**************************************************************
+ * Getter functions to returnr the topTracker and curr node
+ * @return     The top tracker and curr node.
+ **************************************************************/
+Chunk *getTopTracker() {
+    return topTracker;
+} // getTopTracker
+
+
+Node *getCurr() {
+    return curr;
+} // getCurr
