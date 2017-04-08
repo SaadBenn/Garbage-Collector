@@ -1,3 +1,18 @@
+
+//-------------------------------------------------------------------------------------
+// VARIABLES
+//-------------------------------------------------------------------------------------
+
+Node *top = NULL;
+Node *curr = NULL;
+Chunk *topTracker = NULL;
+Chunk *currTracker = NULL;
+
+static int numNodes = 0;
+static int trackerNumNodes = 0;
+// used to track where we are for the list traversal methods
+static Node *traverseNode = NULL;
+
 /****************************************************
  *add an element to the beginning of the linked list
  @new-string word to be added
