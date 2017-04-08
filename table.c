@@ -48,3 +48,39 @@ Boolean insert( char const * const new_string, r_size_t size )
     
     return rc;
 } // insert
+
+
+/****************************************************
+ *tells us whether or not the given string is in the list
+ @target word to be added
+ @returns true if item was found
+ ****************************************************/
+Boolean search( char const * const target )
+{
+    checkState( target ); // invariant
+    
+    Boolean found = false;
+    curr = top;
+    assert( curr == top );
+    
+    while ( curr != NULL && !found )
+    {
+        assert( curr != NULL );
+        
+        if ( strcmp( target, curr->string ) == 0 )
+        {
+            assert( strcmp(target, curr->string) == 0 );
+            found = true;
+        }
+        
+        else
+        {
+            assert( strcmp(target, curr->string) != 0 );
+            curr = curr->next;
+        }
+    }
+    
+    return found;
+} // search
+
+
