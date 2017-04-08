@@ -102,8 +102,13 @@ r_size_t rsize( void *block_ptr ) {
 
 
 Boolean rfree( void *block_ptr ) {
+     Boolean result = false;
+     
+     result = deletePtr(block_ptr);
+     
+     return result;
 
-} // rfree
+ } // rfree
 
 
 void rdestroy( const char *region_name ) {
