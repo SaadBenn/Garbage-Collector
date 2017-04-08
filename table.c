@@ -208,3 +208,67 @@ Node * nextNode()
 } //  nextNde
 
 
+Boolean insertTracker( r_size_t block_size, void *address  ) {
+    
+    Boolean rc = true;
+    
+    //create new node
+    Chunk *newChunk = (Chunk*)malloc(sizeof(Chunk));
+    //check whether node is created or not
+    assert( newChunk );
+    
+    Chunk *temp;
+    Chunk *previous;
+    
+    //Updating different parts of the node
+    newChunk->startLoc = address;
+    newChunk->blockSize = block_size;
+    newChunk->next = NULL;
+    
+    //checking whether the node created is only node or not
+    if (topTracker == NULL)
+    {
+        topTracker = newChunk;
+        curr->head = topTracker;
+    }
+    //If value is less than the value of first node
+    else if(address < topTracker ->startLoc)
+    {
+        newChunk->next = topTracker;
+        topTracker = newChunk;
+        curr->head = topTracker;
+    }
+    else
+    {
+        previous = topTracker;
+        temp = topTracker->next;
+        
+        
+        //Go to the position where node is to be inserted
+        while(temp != NULL && address > temp->startLoc)
+        {
+            previous = temp;
+            temp = temp->next;
+        }
+        
+        
+        //Insert the node at particular position
+        if(temp == NULL)
+        {
+            previous->next = newChunk;
+        }
+        else
+        {
+            newChunk->next = temp;
+            previous->next = newChunk;
+        }
+    }
+    trackerNumNodes++;
+
+    return rc;
+} // insertTracker
+
+
+
+
+
