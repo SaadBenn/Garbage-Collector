@@ -96,5 +96,44 @@ void rdestroy( const char *region_name ) {
 
 
 void rdump() {
+    
+    Node *traverseN = getFirstNode();
+    char *regionName = NULL;
+    
+    if( traverseN ) {
+    	assert( traverseN != NULL );
 
+        printf("\033[44m");
+        printf("\x1B[33m");
+        printf("\n%s", "Printing data structure.");
+        printf("\033[0m");
+        regionName = traverseN->string;
+        rchoose(regionName);
+        printf("\n%s\n", "---------------------------------------------------------" );
+        printf("Region's name: %s\n", traverseN->string );
+        printf("Region's size: %d\n\n", traverseN->size );
+        innerListLoop();
+        
+        traverseN = nextNode();
+        
+        while( traverseN ) {
+            assert( traverseN != NULL );
+
+            regionName = traverseN->string;
+            rchoose(regionName);
+            
+            printf("\n%s\n", "---------------------------------------------------------" );
+            printf("Region's name: %s\n", traverseN->string );
+            printf("Region's size: %d\n\n", traverseN->size );
+            innerListLoop();
+            printf("%s\n", "---------------------------------------------------------" );
+            
+            traverseN = nextNode();
+            
+        }
+        
+    } else {
+    	
+        printf("\n%s\n", "No regions added folks!" ); 
+    }
 } // rdump
