@@ -86,7 +86,12 @@ Boolean rfree( void *block_ptr ) {
 
 
 void rdestroy( const char *region_name ) {
-
+    Boolean result  = cleanInnerList();
+    
+    if( result ) {
+    	assert( result );
+    	delete( region_name );
+    }
 } // rdestroy
 
 
