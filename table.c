@@ -449,3 +449,37 @@ r_size_t bytesSearch( void *ptr )
 } //bytesSearch
 
 
+Boolean cleanInnerList() {
+    
+    Boolean result = false;
+    
+    Chunk *currPointer = topTracker;
+    assert( currPointer == topTracker );
+    
+    while ( topTracker != NULL ) {
+        
+        assert( topTracker != NULL );
+        topTracker = topTracker->next;
+        
+        free ( currPointer );
+        
+        currPointer  = topTracker;
+        assert( currPointer == topTracker );
+        
+        trackerNumNodes = trackerNumNodes -1;
+        
+    } // while loop
+    
+    topTracker = NULL;
+    assert( topTracker == NULL );
+    
+    if ( NULL == topTracker )
+    { 
+        result = true;
+    }
+    
+    return result;
+    
+} // cleanInnerList
+
+
