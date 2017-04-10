@@ -1,5 +1,6 @@
 #include "regions.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "table.h"
 #include <string.h>
@@ -38,20 +39,20 @@ Boolean rinit( const char *region_name, r_size_t region_size ) {
 Boolean rchoose( const char *region_name ) {
     
     Boolean check = search( region_name );
-    Boolean result = true;
+    //Boolean result = false;
     
-    current = getCurr();
-    //topTracker = getTopTracker();
-    topTracker = current->head;
-    if( check && current ) {
+    if ( check ) {
         assert( check );
-        assert( current );
+        current = getCurr();
+  
+        topTracker = current->head;
         
-    } else {
-        result = false;
+        //if( current ) {
+            assert( current );
+        //}
     }
     
-    return result;
+    return check;
     
 } // rchoose
 
@@ -132,7 +133,6 @@ void rdump() {
     	assert( traverseN != NULL );
 
         printf("\033[44m");
-        printf("\x1B[33m");
         printf("\n%s", "Printing data structure.");
         printf("\033[0m");
         regionName = traverseN->string;
