@@ -425,38 +425,50 @@ Boolean deletePtr( void* target )
     
     Chunk *prev = NULL;
     assert( prev == NULL );
-    
-    while ( currN != NULL && (currN->startLoc != target) )
-    {
-        assert( currN != NULL );
-        assert( currN->startLoc != target );
+    const char *regionName = rchosen();
+    Boolean result = rchoose( regionName );
+
+    if ( result ) {
+      while ( currN != NULL && (currN->startLoc != target) )
+      {
+          assert( currN != NULL );
+          assert( currN->startLoc != target );
         
-        prev = currN;
-        currN = currN->next;
-    }
+          prev = currN;
+          currN = currN->next;
+      }
     
     
-    if ( currN != NULL )
-    {
-        assert( currN != NULL );
+      if ( currN != NULL )
+      {
+          assert( currN != NULL );
         
-        if ( prev != NULL ) {
+          if ( prev != NULL ) {
             
-            assert( prev != NULL );
-            prev->next = currN->next;
+              assert( prev != NULL );
+              prev->next = currN->next;
             
-        } else {
+          } else {
             
-            topTracker = currN->next;
-            curr->head = currN->next;
+              if( currN->next ) {
+                topTracker = currN->next;
+             
+                if( curr ) {
+                    curr->head = currN->next;
+                }
+              } else {
+                topTracker = NULL;
+                curr->head = NULL;
+              }
             
-        }
+          }
         
-        free( currN );
-        currN = NULL;
-        assert( currN == NULL );
-        deleted = true;
-        trackerNumNodes--;
+          free( currN );
+          currN = NULL;
+          assert( currN == NULL );
+          deleted = true;
+          trackerNumNodes--;
+      }
     }
     
     return deleted;
