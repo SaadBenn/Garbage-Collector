@@ -505,6 +505,33 @@ r_size_t bytesSearch( void *ptr )
 } //bytesSearch
 
 
+void innerListLoop(r_size_t size, Chunk **header) {
+    
+    r_size_t sum = 0;
+
+    if( header != NULL ) {
+      Chunk *ptrCurr = *(header);
+    
+      while(ptrCurr) {
+        
+        void *ptr = ptrCurr->startLoc;
+        
+        r_size_t size = ptrCurr->blockSize;
+        sum+= ptrCurr->blockSize;
+        printf("Address of Block is: %p\tBlock Size: %hu\n", ptr, size);
+        
+        ptrCurr = ptrCurr->next;
+      }
+    }
+    
+    double freePercentage = ((size - sum)/(double)size) * 100;
+    printf("\nPercent of memory free is %6.2f%%\n", freePercentage);
+
+} // innerListLoop
+
+
+
+
 Boolean cleanInnerList() {
     
     Boolean result = false;
@@ -537,34 +564,6 @@ Boolean cleanInnerList() {
     return result;
     
 } // cleanInnerList
-
-
-void innerListLoop() {
-    
-    r_size_t sum = 0;
-    Chunk *ptrCurr = topTracker;
-    
-    while(ptrCurr) {
-        
-        void *ptr = ptrCurr->startLoc;
-        
-        r_size_t size = ptrCurr->blockSize;
-        sum+= ptrCurr->blockSize;
-        printf("Address of Block is: %p\tBlock Size: %hu\n", ptr, size);
-        
-        ptrCurr = ptrCurr->next;
-    }
-    
-    if( sum == 0) {
-        //printf("\033[35m");
-        printf("\n%s\n", "No blocks allocated so far.");
-        //printf("\033[0m");
-    } else {
-    
-        double freePercentage = ((curr->size - sum)/(double)curr->size) * 100;
-        printf("\nPercent of memory free is \t%6.2f%%\n", freePercentage);
-    }
-} // innerListLoop
 
 
 /**************************************************************
