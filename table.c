@@ -578,3 +578,23 @@ Chunk *getTopTracker() {
 Node *getCurr() {
     return curr;
 } // getCurr
+
+
+Node *getToHead( char const * const target ) {
+
+  Node *outerCurr = top;
+
+  Node *result = NULL;
+
+  while( outerCurr != NULL && strcmp(target, outerCurr->string) != 0 ) {
+
+    outerCurr = outerCurr->next;
+  }
+
+  if( outerCurr != NULL ) {
+
+    result = outerCurr;
+  }
+
+  return result;
+}
