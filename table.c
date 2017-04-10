@@ -178,7 +178,7 @@ Boolean delete( char const * const target )
             
             assert( prev != NULL );
             prev->next = curr->next;
-            topTracker = top->head;
+            topTracker = prev->head;
             
         } else {
             
