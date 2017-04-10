@@ -314,7 +314,7 @@ Boolean insertTracker( r_size_t block_size, void *address  ) {
 
 
 void* allocBlock( r_size_t block_Required, void *ptr ) {
-    r_size_t size = 0;
+    long size = 0;
     Boolean result = false;
     Chunk *traverse = topTracker;
     void * trackingPtr = curr->memory;
