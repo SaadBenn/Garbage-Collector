@@ -368,7 +368,7 @@ void* allocBlock( r_size_t block_Required, void *ptr ) {
         }
         
         if( trackerNumNodes == 1) {
-            r_size_t bSize = traverse->startLoc - trackingPtr;
+            long bSize = (traverse->startLoc+traverse->blockSize) - trackingPtr;
             //printf("Node == 1 part %d\n", bSize);
             if( bSize >= block_Required) {
                 insertTracker(block_Required, trackingPtr);
@@ -382,7 +382,7 @@ void* allocBlock( r_size_t block_Required, void *ptr ) {
                 trackingPtr += traverse->blockSize;
                 
                 bSize = (curr->memory+curr->size) - trackingPtr;
-                if(bSize >= block_Required) {
+                if(bSize > 0 && bSize >= block_Required) {
                     insertTracker(block_Required, trackingPtr);
                     for(int i = 0; i < block_Required; i++) {
                         *((char*)trackingPtr + i) = '0';
