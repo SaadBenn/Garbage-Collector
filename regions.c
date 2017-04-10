@@ -61,10 +61,10 @@ const char *rchosen() {
     
     const char* name = NULL;
     
-    Node *curr = getFirstNode();
+    Node *curr = current;
     
     if( curr ) {
-    	assert( curr != NULL );
+        assert( curr != NULL );
         name = curr->string;
     }
     
