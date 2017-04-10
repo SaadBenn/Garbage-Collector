@@ -114,11 +114,15 @@ Boolean rfree( void *block_ptr ) {
 
 
 void rdestroy( const char *region_name ) {
-    Boolean result  = cleanInnerList();
-    
-    if( result ) {
-    	assert( result );
-    	delete( region_name );
+    //Boolean result  = cleanInnerList();
+    Node *ourRegion = getToHead( region_name );
+
+    Boolean result = cleanInnerList( ourRegion );
+
+    if( ourRegion && result ) {
+        assert( ourRegion );
+        assert( result );
+        delete( region_name );
     }
 } // rdestroy
 
