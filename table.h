@@ -43,13 +43,13 @@ Node * nextNode();
 void* allocBlock( r_size_t block_Required, void *pointer );
 
 // putting the toys away by cleaning up
-Boolean cleanInnerList();
+Boolean cleanInnerList( Node *regionNode);
 
 // starts a list traversal by getting the data at top
 Node * getFirstNode();
 
 // traverses the inner list
-void innerListLoop();
+void innerListLoop( r_size_t size, Chunk **header);
 
 // returnrs the curr node of the outer list
 Node *getCurr();
@@ -62,5 +62,7 @@ Boolean deletePtr( void* target );
 
 // returns the block size
 r_size_t bytesSearch( void *ptr );
+
+Node *getToHead( char const * const target );
 
 #endif
