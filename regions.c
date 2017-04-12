@@ -1,3 +1,12 @@
+//-----------------------------------------
+// NAME: Saad B Mushtaq
+// STUDENT NUMBER: 7785430
+// COURSE: COMP 2160, SECTION: A01
+// INSTRUCTOR: Franklin Bristow
+// ASSIGNMENT: assignment 4
+// 
+// REMARKS: regions implementation
+
 #include "regions.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,9 +14,26 @@
 #include "table.h"
 #include <string.h>
 
+//-------------------------------------------------------------------------------------
+// VARIABLES
+//-------------------------------------------------------------------------------------
 Node *current = NULL;
 extern Chunk *topTracker;
 
+
+//-------------------------------------------------------------------------------------
+// FUNCTIONS
+//-------------------------------------------------------------------------------------
+
+
+/**
+ * @brief      creates a region within the memory
+ *
+ * @param[in]  region_name  The region name
+ * @param[in]  region_size  The region size
+ *
+ * @return     { true if successful }
+ */
 Boolean rinit( const char *region_name, r_size_t region_size ) {
     
     Boolean rc = false;
@@ -36,6 +62,14 @@ Boolean rinit( const char *region_name, r_size_t region_size ) {
 } // rinit
   
 
+/**
+ * @brief      Choose a previously-initialized memory region 
+ * for subsequent ralloc, rsize, and rfree calls
+ *
+ * @param[in]  region_name  The region name
+ *
+ * @return     { true if successful }
+ */
 Boolean rchoose( const char *region_name ) {
     
     Boolean check = search( region_name );
@@ -56,7 +90,12 @@ Boolean rchoose( const char *region_name ) {
     
 } // rchoose
 
-
+/**
+ * @brief      Return the name of the currently-chosen region, 
+ * or NULL if no region is currently chosen.
+ *
+ * @return     { the name of the region }
+ */
 const char *rchosen() {
     
     const char* name = NULL;
@@ -73,6 +112,14 @@ const char *rchosen() {
 } // rchosen
 
 
+/**
+ * @brief      Allocate a block that is the given number of bytes 
+ * large from the currently-chosen region.
+ *
+ * @param[in]  block_size  The block size
+ *
+ * @return     { pointer to the block or NULL }
+ */
 void *ralloc( r_size_t block_size ) {
     void * ptr = NULL;
     
@@ -91,7 +138,14 @@ void *ralloc( r_size_t block_size ) {
     
 } // ralloc
 
-
+/**
+ * @brief      Find out how many bytes the block of memory pointed to by 
+ * the pointer is, in the currently-chosen region.
+ *
+ * @param      block_ptr  The block pointer
+ *
+ * @return     { number of bytes in current block }
+ */
 r_size_t rsize( void *block_ptr ) {
     
     r_size_t size = 0;
@@ -102,7 +156,14 @@ r_size_t rsize( void *block_ptr ) {
     
 } // rsize
 
-
+/**
+ * @brief      Frees the block identified by the given 
+ * pointer in the currently-chosen region.
+ *
+ * @param      block_ptr  The block pointer
+ *
+ * @return     { returns false on error }
+ */
 Boolean rfree( void *block_ptr ) {
      Boolean result = false;
      
@@ -112,7 +173,12 @@ Boolean rfree( void *block_ptr ) {
 
  } // rfree
 
-
+/**
+ * @brief      Destroy the region with the 
+ * given name, freeing all memory associated with it
+ *
+ * @param[in]  region_name  The region name
+ */
 void rdestroy( const char *region_name ) {
     //Boolean result  = cleanInnerList();
     Node *ourRegion = getToHead( region_name );
@@ -127,7 +193,9 @@ void rdestroy( const char *region_name ) {
 } // rdestroy
 
 
-
+/**
+ * @brief      Print all data structures
+ */
 void rdump() {
     
     Node *traverseN = getFirstNode();

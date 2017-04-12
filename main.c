@@ -1,21 +1,34 @@
+//-----------------------------------------
+// NAME: Saad B Mushtaq
+// STUDENT NUMBER: 7785430
+// COURSE: COMP 2160, SECTION: A01
+// INSTRUCTOR: Franklin Bristow
+// ASSIGNMENT: assignment 4
+// 
+// REMARKS: Test cases for the memory management
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
 #include "regions.h"
 
-
+//-------------------------------------------------------------------------------------
+// VARIABLES
+//-------------------------------------------------------------------------------------
 static int assertionCount = 0;
 static int errorCount = 0;
 
-
+//-------------------------------------------------------------------------------------
+// Prototypes
+//-------------------------------------------------------------------------------------
 void testNull( char *check );
 void testNotNull( char *check );
 void testBoolean( Boolean result );
 
 
-// this code should run to completion with the output shown
-// you must think of additional cases of correct use and misuse for your testing
+//-------------------------------------------------------------------------------------
+// FUNCTIONS
+//-------------------------------------------------------------------------------------
 int main() {
 
 	Boolean rc;
