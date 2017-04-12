@@ -45,11 +45,11 @@ Boolean rinit( const char *region_name, r_size_t region_size ) {
         Boolean result = search( region_name );
         
         if ( !result ) {
-        	assert( !result);
+            assert( !result);
             Boolean resIn = insert( region_name, region_size );
             
             if( resIn ) {
-            	assert( resIn );
+                assert( resIn );
                 rc = true;
                 Boolean rch = rchoose( region_name );
                 assert( rch );

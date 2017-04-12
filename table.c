@@ -249,7 +249,7 @@ Node * nextNode()
     }
     
     return cNode;
-} //  nextNde
+}
 
 /****************************************************
  *Creates a new node which is ordered
@@ -431,7 +431,8 @@ void* allocBlock( r_size_t block_Required, void *ptr ) {
  ****************************************************/
 Boolean deletePtr( void* target )
 {
-    assert( target != NULL );
+    
+    //checkState( target );
     
     Boolean deleted = false;
     Chunk *currN = topTracker;
@@ -443,8 +444,6 @@ Boolean deletePtr( void* target )
     Boolean result = rchoose( regionName );
 
     if ( result ) {
-        assert( result );
-
       while ( currN != NULL && (currN->startLoc != target) )
       {
           assert( currN != NULL );
@@ -467,7 +466,6 @@ Boolean deletePtr( void* target )
           } else {
             
               if( currN->next ) {
-                assert( currN->next );
                 topTracker = currN->next;
              
                 if( curr ) {
@@ -499,8 +497,7 @@ Boolean deletePtr( void* target )
  *returns the contiguous number of  bytes
  ****************************************************/
 r_size_t bytesSearch( void *ptr )
-{   
-    assert( ptr != NULL );
+{
     r_size_t blockSize = 0;
     Boolean found = false;
     currTracker = topTracker;
@@ -536,16 +533,13 @@ r_size_t bytesSearch( void *ptr )
  */
 void innerListLoop(r_size_t size, Chunk **header) {
     
-    assert( size );
-
     r_size_t sum = 0;
 
     if( header != NULL ) {
-        assert( header != NULL );
       Chunk *ptrCurr = *(header);
     
       while(ptrCurr) {
-        assert( ptrCurr );
+        
         void *ptr = ptrCurr->startLoc;
         
         r_size_t size = ptrCurr->blockSize;
@@ -568,33 +562,33 @@ void innerListLoop(r_size_t size, Chunk **header) {
  *
  * @return     { true if successful }
  */
-Boolean cleanInnerList() {
+Boolean cleanInnerList(Node *regionNode) {
     
     Boolean result = false;
     
-    Chunk *currPointer = topTracker;
-    assert( currPointer == topTracker );
-    
-    while ( topTracker != NULL ) {
+    Chunk *currPointer = regionNode->head;
+    assert( currPointer == regionNode->head );
+    Chunk *headerPtr = regionNode->head;
+   
+    while ( headerPtr != NULL ) {
         
-        assert( topTracker != NULL );
-        topTracker = topTracker->next;
+        assert( headerPtr != NULL );
+        headerPtr = headerPtr->next;
         
         free ( currPointer );
         
-        currPointer  = topTracker;
-        assert( currPointer == topTracker );
+        currPointer  = headerPtr;
+        assert( currPointer == headerPtr );
         
-        trackerNumNodes = trackerNumNodes -1;
+        //trackerNumNodes = trackerNumNodes -1;
         
     } // while loop
     
-    topTracker = NULL;
-    assert( topTracker == NULL );
+    headerPtr = NULL;
+    assert( headerPtr == NULL );
     
-    if ( NULL == topTracker )
+    if ( NULL == headerPtr )
     { 
-        assert( topTracker == NULL );
         result = true;
     }
     
@@ -627,9 +621,8 @@ Node *getCurr() {
 Node *getToHead( char const * const target ) {
 
   Node *outerCurr = top;
-  assert( target != NULL ); // pre condition
+
   Node *result = NULL;
-  assert( result == NULL );
 
   while( outerCurr != NULL && strcmp(target, outerCurr->string) != 0 ) {
 
@@ -637,7 +630,7 @@ Node *getToHead( char const * const target ) {
   }
 
   if( outerCurr != NULL ) {
-    assert( outerCurr != NULL );
+
     result = outerCurr;
   }
 
