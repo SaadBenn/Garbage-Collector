@@ -497,9 +497,11 @@ Boolean deletePtr( void* target )
  *returns the contiguous number of  bytes
  ****************************************************/
 r_size_t bytesSearch( void *ptr )
-{
+{   
+    assert( ptr != NULL );
     r_size_t blockSize = 0;
     Boolean found = false;
+    val_Mem_Region( curr );
     currTracker = topTracker;
     assert( currTracker == topTracker );
     
