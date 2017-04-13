@@ -65,4 +65,7 @@ r_size_t bytesSearch( void *ptr );
 
 Node *getToHead( char const * const target );
 
+void val_Mem_Region(Node *ptr);
+
+
 #endif

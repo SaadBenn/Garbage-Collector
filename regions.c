@@ -20,10 +20,17 @@
 Node *current = NULL;
 extern Chunk *topTracker;
 
-
 //-------------------------------------------------------------------------------------
 // FUNCTIONS
 //-------------------------------------------------------------------------------------
+void val_Mem_Region(Node *ptr)
+{
+  assert(NULL != ptr);
+  assert(NULL != ptr->string);
+  assert(NULL != ptr->memory);
+  
+  assert(ptr->size > 0);
+}
 
 
 /**
@@ -53,6 +60,7 @@ Boolean rinit( const char *region_name, r_size_t region_size ) {
                 rc = true;
                 Boolean rch = rchoose( region_name );
                 assert( rch );
+                val_Mem_Region( current ); // invariant
             }
         }
     }
@@ -78,7 +86,7 @@ Boolean rchoose( const char *region_name ) {
     if ( check ) {
         assert( check );
         current = getCurr();
-  
+        val_Mem_Region( current ); // invaraint
         topTracker = current->head;
         
         //if( current ) {
@@ -104,6 +112,7 @@ const char *rchosen() {
     
     if( curr ) {
         assert( curr != NULL );
+        val_Mem_Region( curr );
         name = curr->string;
     }
     
@@ -128,12 +137,12 @@ void *ralloc( r_size_t block_size ) {
     if( block_size > 0 && block_size <= current->size) {
         assert( block_size > 0 );
         assert( block_size <= current->size );
-        
+        val_Mem_Region( current ); // invariant
         ptr = allocBlock(block_size, ptr);
         
     }
     
-    
+    val_Mem_Region( current );
     return ptr;
     
 } // ralloc
@@ -167,8 +176,10 @@ r_size_t rsize( void *block_ptr ) {
 Boolean rfree( void *block_ptr ) {
      Boolean result = false;
      
+     val_Mem_Region( current );
      result = deletePtr(block_ptr);
      
+     val_Mem_Region( current );
      return result;
 
  } // rfree
@@ -182,6 +193,7 @@ Boolean rfree( void *block_ptr ) {
 void rdestroy( const char *region_name ) {
     //Boolean result  = cleanInnerList();
     Node *ourRegion = getToHead( region_name );
+    
 
     Boolean result = cleanInnerList( ourRegion );
 
@@ -204,7 +216,7 @@ void rdump() {
     
     if( traverseN ) {
         assert( traverseN != NULL );
-
+        val_Mem_Region( traverseN );
         printf("\033[44m");
         printf("\x1B[33m");
         printf("\n%s", "Printing data structure.");
@@ -227,7 +239,7 @@ void rdump() {
         
         while( traverseN ) {
             assert( traverseN != NULL );
-
+            val_Mem_Region( traverseN );
             regionName = traverseN->string;
             header = traverseN->head;
             //topTracker = traverseN->head;
