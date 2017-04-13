@@ -118,7 +118,10 @@ int main() {
    * Testing rdump when a block is deleted
    ********************************************************/
   rdump();
+  // rc = rchoose( "world");
+  // testBoolean( rc );
 
+  // printf("\n\nChosen: %s\n", rchosen());
   /*********************************************************
    * Destroying the last node
    *********************************************************/
