@@ -4,7 +4,7 @@
 // COURSE: COMP 2160, SECTION: A01
 // INSTRUCTOR: Franklin Bristow
 // ASSIGNMENT: assignment 4
-// 
+//
 // REMARKS: table
 
 #include <stdio.h>
@@ -13,20 +13,29 @@
 #include <assert.h>
 #include "table.h"
 #include "regions.h"
+
+
 //-------------------------------------------------------------------------------------
 // VARIABLES
 //-------------------------------------------------------------------------------------
 
 Node *top = NULL;
 Node *curr = NULL;
+static int numNodes = 0;
+static int trackerNumNodes = 0;
 Chunk *topTracker = NULL;
 Chunk *currTracker = NULL;
 
-static int numNodes = 0;
-static int trackerNumNodes = 0;
 // used to track where we are for the list traversal methods
 static Node *traverseNode = NULL;
 
+
+//-------------------------------------------------------------------------------------
+// PROTOTYPES
+//-------------------------------------------------------------------------------------
+
+// invariant
+static void checkState( char const * const string);
 
 //-------------------------------------------------------------------------------------
 // FUNCTIONS
@@ -37,7 +46,7 @@ static Node *traverseNode = NULL;
  *******************************************************/
 static void checkState( char const * const string) {
     
-    assert( string != NULL );
+    //assert( string != NULL );
     assert( '\0' == string[strlen( string )] );
     assert( numNodes >= 0 );
     
@@ -56,6 +65,8 @@ static void checkState( char const * const string) {
     }
     
 } // checkState
+
+
 
 /****************************************************
  *add an element to the beginning of the linked list
@@ -109,6 +120,7 @@ Boolean insert( char const * const new_string, r_size_t size )
 } // insert
 
 
+
 /****************************************************
  *tells us whether or not the given string is in the list
  @target word to be added
@@ -143,6 +155,7 @@ Boolean search( char const * const target )
 } // search
 
 
+
 /****************************************************
  *remove an element with the given string
  @target word to be added
@@ -154,7 +167,7 @@ Boolean delete( char const * const target )
     checkState( target );
     
     Boolean deleted = false;
-    Node *curr = top;
+    curr = top;
     assert( curr == top );
     
     Node *prev = NULL;
@@ -184,7 +197,7 @@ Boolean delete( char const * const target )
             
             top = curr->next;
             if(top)
-            topTracker = top->head;
+                topTracker = top->head;
         }
         
         if( curr->string != NULL ) {
@@ -313,7 +326,7 @@ Boolean insertTracker( r_size_t block_size, void *address  ) {
         }
     }
     trackerNumNodes++;
-
+    
     return rc;
 } // insertTracker
 
@@ -341,13 +354,13 @@ void* allocBlock( r_size_t block_Required, void *ptr ) {
             trackingPtr = nextFree;
             
             if( traverse->next != NULL ) {
-            
+                
                 void *address = traverse->next->startLoc;
-            
+                
                 size = address - nextFree;
                 //printf("If part %d\n", size);
-            
-                if( size > block_Required) {
+                
+                if( size >= block_Required) {
                     insertTracker(block_Required, nextFree);
                     for(int i = 0; i < block_Required; i++) {
                         *((char*)trackingPtr + i) = '0';
@@ -359,10 +372,10 @@ void* allocBlock( r_size_t block_Required, void *ptr ) {
                 }
                 
             } else {
-            
+                
                 size = (curr->memory+curr->size) - trackingPtr;
                 //printf("Else part %d\n", size);
-            
+                
                 if(size >= block_Required) {
                     insertTracker(block_Required, trackingPtr);
                     for(int i = 0; i < block_Required; i++) {
@@ -373,36 +386,35 @@ void* allocBlock( r_size_t block_Required, void *ptr ) {
                 } else {
                     trackingPtr += size;
                 }
-
+                
             }
-        }
-        
-        if( trackerNumNodes == 1) {
-            long bSize = (traverse->startLoc+traverse->blockSize) - trackingPtr;
-            //printf("Node == 1 part %d\n", bSize);
-            if( bSize >= block_Required) {
+        } else {
+            size = traverse->startLoc - trackingPtr;
+            if(size >= block_Required) {
                 insertTracker(block_Required, trackingPtr);
                 for(int i = 0; i < block_Required; i++) {
                     *((char*)trackingPtr + i) = '0';
                 }
                 ptr = trackingPtr;
                 result = true;
-            } else {
-                trackingPtr += bSize;
-                trackingPtr += traverse->blockSize;
                 
-                bSize = (curr->memory+curr->size) - trackingPtr;
-                if(bSize > 0 && bSize >= block_Required) {
-                    insertTracker(block_Required, trackingPtr);
-                    for(int i = 0; i < block_Required; i++) {
-                        *((char*)trackingPtr + i) = '0';
+            } else {
+                
+                if( traverse->next == NULL ) {
+                    trackingPtr = traverse->startLoc + traverse->blockSize;
+                    size = curr->memory+curr->size - trackingPtr;
+                    if(size >= block_Required) {
+                        insertTracker(block_Required, trackingPtr);
+                        for(int i = 0; i < block_Required; i++) {
+                            *((char*)trackingPtr + i) = '0';
+                        }
+                        ptr = trackingPtr;
+                        result = true;
                     }
-                    ptr = trackingPtr;
-                    result = true;
+                    
                 }
             }
-        }
-        
+        }     
         traverse = traverse->next;
         
     }
@@ -421,7 +433,6 @@ void* allocBlock( r_size_t block_Required, void *ptr ) {
     
     return ptr;
 } // end allocBlock
-
 
 /****************************************************
  *deletes a block by traversing the list and 
@@ -442,54 +453,53 @@ Boolean deletePtr( void* target )
     assert( prev == NULL );
     const char *regionName = rchosen();
     Boolean result = rchoose( regionName );
-
+    
     if ( result ) {
-      while ( currN != NULL && (currN->startLoc != target) )
-      {
-          assert( currN != NULL );
-          assert( currN->startLoc != target );
+        while ( currN != NULL && (currN->startLoc != target) )
+        {
+            assert( currN != NULL );
+            assert( currN->startLoc != target );
+            
+            prev = currN;
+            currN = currN->next;
+        }
         
-          prev = currN;
-          currN = currN->next;
-      }
-    
-    
-      if ( currN != NULL )
-      {
-          assert( currN != NULL );
         
-          if ( prev != NULL ) {
+        if ( currN != NULL )
+        {
+            assert( currN != NULL );
             
-              assert( prev != NULL );
-              prev->next = currN->next;
-            
-          } else {
-            
-              if( currN->next ) {
-                topTracker = currN->next;
-             
-                if( curr ) {
-                    curr->head = currN->next;
+            if ( prev != NULL ) {
+                
+                assert( prev != NULL );
+                prev->next = currN->next;
+                
+            } else {
+                
+                if( currN->next ) {
+                    topTracker = currN->next;
+                    
+                    if( curr ) {
+                        curr->head = currN->next;
+                    }
+                } else {
+                    topTracker = NULL;
+                    curr->head = NULL;
                 }
-              } else {
-                topTracker = NULL;
-                curr->head = NULL;
-              }
+                
+            }
             
-          }
-        
-          free( currN );
-          currN = NULL;
-          assert( currN == NULL );
-          deleted = true;
-          trackerNumNodes--;
-      }
+            free( currN );
+            currN = NULL;
+            assert( currN == NULL );
+            deleted = true;
+            trackerNumNodes--;
+        }
     }
     
     return deleted;
     
 } // end delete function
-
 
 /****************************************************
  *Looks for contiguous bytes in the buffer
@@ -497,12 +507,11 @@ Boolean deletePtr( void* target )
  *returns the contiguous number of  bytes
  ****************************************************/
 r_size_t bytesSearch( void *ptr )
-{   
-    assert( ptr != NULL );
+{
     r_size_t blockSize = 0;
     Boolean found = false;
-    val_Mem_Region( curr );
     currTracker = topTracker;
+    
     assert( currTracker == topTracker );
     
     while ( currTracker != NULL && !found )
@@ -519,7 +528,8 @@ r_size_t bytesSearch( void *ptr )
         else
         {
             assert( currTracker->startLoc != ptr );
-            curr = curr->next;
+            //if( currTracker->next )
+            currTracker = currTracker->next;
         }
     }
     
@@ -536,27 +546,26 @@ r_size_t bytesSearch( void *ptr )
 void innerListLoop(r_size_t size, Chunk **header) {
     
     r_size_t sum = 0;
-
-    if( header != NULL ) {
-      Chunk *ptrCurr = *(header);
     
-      while(ptrCurr) {
+    if( header != NULL ) {
+        Chunk *ptrCurr = *(header);
         
-        void *ptr = ptrCurr->startLoc;
-        
-        r_size_t size = ptrCurr->blockSize;
-        sum+= ptrCurr->blockSize;
-        printf("Address of Block is: %p\tBlock Size: %hu\n", ptr, size);
-        
-        ptrCurr = ptrCurr->next;
-      }
+        while(ptrCurr) {
+            
+            void *ptr = ptrCurr->startLoc;
+            
+            r_size_t size = ptrCurr->blockSize;
+            sum+= ptrCurr->blockSize;
+            printf("Address of Block is: %p\tBlock Size: %hu\n", ptr, size);
+            
+            ptrCurr = ptrCurr->next;
+        }
     }
     
     double freePercentage = ((size - sum)/(double)size) * 100;
     printf("\nPercent of memory free is %6.2f%%\n", freePercentage);
-
+    
 } // innerListLoop
-
 
 
 /**
@@ -571,7 +580,7 @@ Boolean cleanInnerList(Node *regionNode) {
     Chunk *currPointer = regionNode->head;
     assert( currPointer == regionNode->head );
     Chunk *headerPtr = regionNode->head;
-   
+    
     while ( headerPtr != NULL ) {
         
         assert( headerPtr != NULL );
@@ -590,7 +599,7 @@ Boolean cleanInnerList(Node *regionNode) {
     assert( headerPtr == NULL );
     
     if ( NULL == headerPtr )
-    { 
+    {
         result = true;
     }
     
@@ -612,7 +621,6 @@ Node *getCurr() {
     return curr;
 } // getCurr
 
-
 /**
  * @brief      gets to the head node of the current region
  *
@@ -621,20 +629,20 @@ Node *getCurr() {
  * @return     the head node of the inner list
  */
 Node *getToHead( char const * const target ) {
-
-  Node *outerCurr = top;
-
-  Node *result = NULL;
-
-  while( outerCurr != NULL && strcmp(target, outerCurr->string) != 0 ) {
-
-    outerCurr = outerCurr->next;
-  }
-
-  if( outerCurr != NULL ) {
-
-    result = outerCurr;
-  }
-
-  return result;
+    
+    Node *outerCurr = top;
+    
+    Node *result = NULL;
+    
+    while( outerCurr != NULL && strcmp(target, outerCurr->string) != 0 ) {
+        
+        outerCurr = outerCurr->next;
+    }
+    
+    if( outerCurr != NULL ) {
+        
+        result = outerCurr;
+    }
+    
+    return result;
 }
