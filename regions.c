@@ -20,7 +20,6 @@
 Node *current = NULL;
 extern Chunk *topTracker;
 
-//-------------------------------------------------------------------------------------
 // FUNCTIONS
 //-------------------------------------------------------------------------------------
 void val_Mem_Region(Node *ptr)
@@ -48,19 +47,20 @@ Boolean rinit( const char *region_name, r_size_t region_size ) {
     if ( region_size > 0 ) {
         assert( region_size > 0);
         region_size = (region_size + 7) - ((region_size + 7) % 8); // round up
+        if( region_name != NULL ) {
+            Boolean result = search( region_name );
         
-        Boolean result = search( region_name );
-        
-        if ( !result ) {
-            assert( !result);
-            Boolean resIn = insert( region_name, region_size );
+            if ( !result ) {
+                assert( !result);
+                Boolean resIn = insert( region_name, region_size );
             
-            if( resIn ) {
-                assert( resIn );
-                rc = true;
-                Boolean rch = rchoose( region_name );
-                assert( rch );
-                val_Mem_Region( current ); // invariant
+                if( resIn ) {
+                    assert( resIn );
+                    rc = true;
+                    Boolean rch = rchoose( region_name );
+                    assert( rch );
+                    val_Mem_Region( current ); // invariant
+                }
             }
         }
     }
@@ -68,7 +68,7 @@ Boolean rinit( const char *region_name, r_size_t region_size ) {
     return rc;
     
 } // rinit
-  
+
 
 /**
  * @brief      Choose a previously-initialized memory region 
@@ -79,24 +79,27 @@ Boolean rinit( const char *region_name, r_size_t region_size ) {
  * @return     { true if successful }
  */
 Boolean rchoose( const char *region_name ) {
+    Boolean check = false;
     
-    Boolean check = search( region_name );
-    //Boolean result = false;
+    if( region_name ) {
+        check = search( region_name );
     
-    if ( check ) {
-        assert( check );
-        current = getCurr();
-        val_Mem_Region( current ); // invaraint
-        topTracker = current->head;
-        
-        //if( current ) {
-            assert( current );
-        //}
+    
+        if ( check ) {
+            assert( check );
+            current = getCurr();
+            if( current ) {
+                topTracker = current->head;
+                assert( current );
+                val_Mem_Region( current ); // invaraint
+            }
+        }
     }
     
     return check;
     
 } // rchoose
+
 
 /**
  * @brief      Return the name of the currently-chosen region, 
@@ -112,14 +115,13 @@ const char *rchosen() {
     
     if( curr ) {
         assert( curr != NULL );
-        val_Mem_Region( curr );
         name = curr->string;
+        val_Mem_Region( curr );
     }
     
     return name;
     
 } // rchosen
-
 
 /**
  * @brief      Allocate a block that is the given number of bytes 
@@ -134,15 +136,15 @@ void *ralloc( r_size_t block_size ) {
     
     block_size = (block_size + 7) - ((block_size + 7) % 8); // round up
     
-    if( block_size > 0 && block_size <= current->size) {
+    if( block_size > 0 && current != NULL && block_size <= current->size) {
         assert( block_size > 0 );
         assert( block_size <= current->size );
-        val_Mem_Region( current ); // invariant
-        ptr = allocBlock(block_size, ptr);
         
+        ptr = allocBlock(block_size, ptr);
+        val_Mem_Region( current ); // invariant
     }
     
-    val_Mem_Region( current );
+    
     return ptr;
     
 } // ralloc
@@ -158,9 +160,13 @@ void *ralloc( r_size_t block_size ) {
 r_size_t rsize( void *block_ptr ) {
     
     r_size_t size = 0;
-    size = bytesSearch(block_ptr);
+    current = getCurr();
+    if( block_ptr && current ) {
+        size = bytesSearch(block_ptr);
     
-    assert( size >= 0 );
+        assert( size >= 0 );
+    }
+    
     return size;
     
 } // rsize
@@ -174,15 +180,17 @@ r_size_t rsize( void *block_ptr ) {
  * @return     { returns false on error }
  */
 Boolean rfree( void *block_ptr ) {
-     Boolean result = false;
-     
-     val_Mem_Region( current );
-     result = deletePtr(block_ptr);
-     
-     val_Mem_Region( current );
-     return result;
+    Boolean result = false;
+    if( current != NULL && current->head ) {
+        val_Mem_Region( current );
+        result = deletePtr(block_ptr);
+        val_Mem_Region( current );
+    }
+    
+    return result;
+    
+} // rfree
 
- } // rfree
 
 /**
  * @brief      Destroy the region with the 
@@ -192,22 +200,22 @@ Boolean rfree( void *block_ptr ) {
  */
 void rdestroy( const char *region_name ) {
     //Boolean result  = cleanInnerList();
-    Node *ourRegion = getToHead( region_name );
+    if( region_name ) {
+        Node *ourRegion = getToHead( region_name );
+        if( ourRegion ) {
+            Boolean result = cleanInnerList( ourRegion );
     
-
-    Boolean result = cleanInnerList( ourRegion );
-
-    if( ourRegion && result ) {
-        assert( ourRegion );
-        assert( result );
-        delete( region_name );
+            if( ourRegion && result ) {
+                assert( ourRegion );
+                assert( result );
+                delete( region_name );
+            }
+        }
     }
 } // rdestroy
 
 
-/**
- * @brief      Print all data structures
- */
+
 void rdump() {
     
     Node *traverseN = getFirstNode();
@@ -215,8 +223,9 @@ void rdump() {
     Chunk *header = NULL;
     
     if( traverseN ) {
-        assert( traverseN != NULL );
         val_Mem_Region( traverseN );
+        assert( traverseN != NULL );
+        
         printf("\033[44m");
         printf("\x1B[33m");
         printf("\n%s", "Printing data structure.");
@@ -233,13 +242,14 @@ void rdump() {
         } else {
             printf("\nPercent of memory free is %6.2f%%\n", 100.0);
         }
-          
+        
         
         traverseN = nextNode();
         
         while( traverseN ) {
-            assert( traverseN != NULL );
             val_Mem_Region( traverseN );
+            assert( traverseN != NULL );
+            
             regionName = traverseN->string;
             header = traverseN->head;
             //topTracker = traverseN->head;
@@ -257,6 +267,6 @@ void rdump() {
         
     } else {
         printf("\n%s\n", "---------------------------------------------------------" );
-        printf("\n%s\n", "No regions added folks!" ); 
+        //printf("\n%s\n", "No regions added folks!" );
     }
 } // rdump
