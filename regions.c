@@ -48,6 +48,7 @@ Boolean rinit( const char *region_name, r_size_t region_size ) {
         assert( region_size > 0);
         region_size = (region_size + 7) - ((region_size + 7) % 8); // round up
         if( region_name != NULL ) {
+            assert( region_name != NULL );
             Boolean result = search( region_name );
         
             if ( !result ) {
@@ -82,6 +83,7 @@ Boolean rchoose( const char *region_name ) {
     Boolean check = false;
     
     if( region_name ) {
+        assert( region_name != NULL );
         check = search( region_name );
     
     
@@ -162,6 +164,7 @@ r_size_t rsize( void *block_ptr ) {
     r_size_t size = 0;
     current = getCurr();
     if( block_ptr && current ) {
+        assert( block_ptr );
         size = bytesSearch(block_ptr);
     
         assert( size >= 0 );

@@ -36,6 +36,7 @@ static Node *traverseNode = NULL;
 
 // invariant
 static void checkState( char const * const string);
+void valInnerList(Chunk *block);
 
 //-------------------------------------------------------------------------------------
 // FUNCTIONS
@@ -66,6 +67,10 @@ static void checkState( char const * const string) {
     
 } // checkState
 
+void valInnerList(Chunk *block) {
+    assert( block->blockSize > 0 );
+    assert( block->startLoc != NULL );
+}
 
 
 /****************************************************
@@ -284,12 +289,17 @@ Boolean insertTracker( r_size_t block_size, void *address  ) {
     
     //Updating different parts of the node
     newChunk->startLoc = address;
+    assert( newChunk->startLoc == address );
+
     newChunk->blockSize = block_size;
+    assert( newChunk->blockSize == block_size );
+
     newChunk->next = NULL;
     
     //checking whether the node created is only node or not
     if (topTracker == NULL)
     {
+        assert( topTracker == NULL );
         topTracker = newChunk;
         curr->head = topTracker;
     }
@@ -327,6 +337,7 @@ Boolean insertTracker( r_size_t block_size, void *address  ) {
     }
     trackerNumNodes++;
     
+    valInnerList( newChunk );
     return rc;
 } // insertTracker
 
@@ -344,7 +355,7 @@ void* allocBlock( r_size_t block_Required, void *ptr ) {
     
     while( traverse != NULL && !result ) {
         
-        
+        assert( traverse != NULL );
         if( trackingPtr == traverse->startLoc) {
             
             void* startPoint =traverse->startLoc;
@@ -352,7 +363,7 @@ void* allocBlock( r_size_t block_Required, void *ptr ) {
             
             void* nextFree = startPoint + bSize;
             trackingPtr = nextFree;
-            
+            assert( trackingPtr == nextFree );
             if( traverse->next != NULL ) {
                 
                 void *address = traverse->next->startLoc;
@@ -511,13 +522,13 @@ r_size_t bytesSearch( void *ptr )
     r_size_t blockSize = 0;
     Boolean found = false;
     currTracker = topTracker;
-    
+    assert( ptr != NULL );
     assert( currTracker == topTracker );
     
     while ( currTracker != NULL && !found )
     {
         assert( currTracker != NULL );
-        
+        valInnerList( currTracker );
         if ( currTracker->startLoc == ptr )
         {
             assert( currTracker->startLoc == ptr );
@@ -533,6 +544,7 @@ r_size_t bytesSearch( void *ptr )
         }
     }
     
+
     return blockSize;
 } //bytesSearch
 
@@ -546,7 +558,7 @@ r_size_t bytesSearch( void *ptr )
 void innerListLoop(r_size_t size, Chunk **header) {
     
     r_size_t sum = 0;
-    
+    assert( size > 0 );
     if( header != NULL ) {
         Chunk *ptrCurr = *(header);
         
@@ -630,6 +642,7 @@ Node *getCurr() {
  */
 Node *getToHead( char const * const target ) {
     
+    assert( target != NULL );
     Node *outerCurr = top;
     
     Node *result = NULL;
